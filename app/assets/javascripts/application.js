@@ -14,3 +14,6 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+//= require pagy
+
+window.addEventListener("turbolinks:load", Pagy.init);

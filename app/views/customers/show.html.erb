@@ -1,0 +1,10 @@
+<h1>Customer</h1>
+
+<ul class="collection with-header">
+  <li class="collection-header"><h5>Details</h5></li>
+  <% @customer.each do |key, value| %>
+    <li class="collection-item"><strong><%= key.to_s.titleize %></strong>: <%= value %></li>
+  <% end %>
+</ul>
+
+<%= link_to 'Back', url_for(request.env.fetch('HTTP_REFERER', customers_path)) %>

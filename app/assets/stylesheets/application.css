@@ -13,3 +13,7 @@
  *= require_tree .
  *= require_self
  */
+
+.monospace {
+  font-family: 'Roboto Mono', monospace;
+}

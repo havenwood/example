@@ -1,0 +1,24 @@
+<h1>Customers</h1>
+
+<%== pagy_materialize_responsive_nav(@pagy) %>
+
+<table class="highlight">
+  <thead>
+    <tr>
+      <% %i[id given_name family_name creation_source].each do |th| %>
+        <th><%= th.to_s.titleize %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @customers.each do |customer| %>
+      <tr>
+        <td width="40%" class="monospace"><%= link_to customer[:id], controller: :customers, action: :show, id: customer[:id] %></td>
+        <td width="20%"><%= customer[:given_name].titleize %></td>
+        <td width="20%"><%= customer[:family_name].titleize %></td>
+        <td width="20%"><%= customer[:creation_source] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

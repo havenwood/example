@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
-  root 'customer#list'
-  get 'customer/list'
+  root to: redirect('customers?page=1')
+
+  resources :customers, only: %i[show index]
 end
