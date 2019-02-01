@@ -1,17 +1,35 @@
 class Customer
-  extend ActiveModel::Naming
+  API = Square.new.customers
+  FIELDS = %i[idempotency_key given_name family_name company_name nickname
+              email_address address phone_number reference_id note birthday]
+  TRAITS = %i[id creation_source groups preferences created_at updated_at]
+  Attributes = Struct.new *FIELDS, *TRAITS, keyword_init: true
 
-  SQUARE = Square.new
+  include ActiveModel::Model
+  extend Forwardable
+
+  attr_accessor :id
+  attr_accessor :attributes
+
+  def initialize(attributes = {})
+    super
+    @attributes = Attributes.new
+  end
+
+  def self.find(id)
+    customer = new id: id
+    customer.attributes = Attributes.new customer.retrieve(customer_id: id).to_h
+    customer
+  end
 
   def self.list
-    @list ||= SQUARE.customers.list
+    @list ||= Customer::API.list
   end
 
-  def self.retrieve customer_id:
-    SQUARE.customers.retrieve customer_id: customer_id
-  end
+  def_delegators 'Customer::API', :create, :delete, :retrieve, :update
+  def_delegators :@attributes, *FIELDS, *TRAITS
 
   def persisted?
-    false
+    @attributes.any?
   end
 end

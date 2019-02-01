@@ -1,5 +1,6 @@
-<h1>Customers</h1>
+<h1><%= link_to 'Customers', customers_path %></h1>
 
+<%= link_to 'New Customer', new_customer_path, class: 'btn right' %>
 <%== pagy_materialize_responsive_nav(@pagy) %>
 
 <table class="highlight">
