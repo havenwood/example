@@ -16,17 +16,29 @@ class Customer
     @attributes = Attributes.new
   end
 
-  def self.find(id)
-    customer = new id: id
-    customer.attributes = Attributes.new customer.retrieve(customer_id: id).to_h
-    customer
+  class << self
+    def find(id)
+      customer = new id: id
+      customer.attributes = Attributes.new Customer::API.retrieve(customer_id: id).to_h
+      customer
+    end
+
+    def list
+      @list ||= Customer::API.list
+    end
+
+    def delete(id)
+      API.delete customer_id: id
+    end
+    alias destroy delete
   end
 
-  def self.list
-    @list ||= Customer::API.list
+  def delete
+    API.delete customer_id: @id
   end
+  alias destroy delete
 
-  def_delegators 'Customer::API', :create, :delete, :retrieve, :update
+  def_delegators 'Customer::API', :create, :update
   def_delegators :@attributes, *FIELDS, *TRAITS
 
   def persisted?

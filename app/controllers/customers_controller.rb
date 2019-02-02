@@ -30,7 +30,7 @@ class CustomersController < ApplicationController
   end
 
   def destroy
-    response = Customer.new.delete customer_id: params[:id]
+    response = Customer.delete params[:id]
     Customer.list.flush_cache if response.success?
 
     respond_to do |format|
