@@ -1,63 +1,52 @@
 <h1><%= link_to 'Customers', customers_path %></h1>
 
-<div class="row">
-  <div class="col l6">
-    <%= link_to 'Back', url_for(request.env.fetch('HTTP_REFERER', customers_path)), class: 'btn' %>
-    <%= link_to 'Save', customers_path, method: 'post', class: 'btn blue right' %>
+<%= form_with scope: :customer, url: customers_path, method: :post, local: true do |form| %>
+  <div class="row">
+    <div class="col l8">
+      <%= link_to 'Back', url_for(request.env.fetch('HTTP_REFERER', customers_path)), class: 'btn' %>
+      <%= form.submit class: 'btn blue right' %>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col l6">
-    <ul class="collection with-header">
-      <li class="collection-header teal-text">
-        <h5>
-          <%= @customer.given_name&.titleize %>
-          <%= @customer.family_name&.titleize %>
-        </h5>
-      </li>
+  <% flash[:errors]&.each do |errors| %>
+    <div class="row">
+      <div class="col l8">
+        <ul class="collection">
+          <% errors.each do |error, message| %>
+            <li class="collection-item">
+              <span class="title red-text"><%= error.to_s.titleize %>:</span>
+              <br>
+              <%= message %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
 
-      <li class="collection-item avatar">
-        <i class="material-icons circle">perm_identity</i>
-        <span class="title teal-text">ID</span>
-        <br>
-        <%= @customer.id %>
-      </li>
+  <div class="row">
+    <div class="col l8">
+      <ul class="collection">
+        <li class="collection-item avatar">
+          <i class="material-icons circle">person</i>
+          <span class="title teal-text">Given Name:</span>
+          <%= form.text_field :given_name %>
+          <span class="title teal-text">Family Name:</span>
+          <%= form.text_field :family_name %>
+        </li>
 
-      <li class="collection-item avatar">
-        <span class="title teal-text">Creation Source</span>
-        <br>
-        <%= @customer.creation_source %>
-      </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle">email</i>
+          <span class="title teal-text">Email Address:</span>
+          <%= form.text_field :email_address %>
+        </li>
 
-      <li class="collection-item avatar">
-        <i class="material-icons circle">group</i>
-        <span class="title teal-text">Groups</span>
-        <table>
-          <thead>
-            <th>Name</th>
-            <th>ID</th>
-          </thead>
-          <tbody>
-            <% @customer.groups&.each do |id:, name:| %>
-              <tr>
-                <td><%= name %></td>
-                <td class="monospace"><%= id.upcase %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <br>
-      </li>
-
-      <li class="collection-item avatar">
-        <i class="material-icons circle">settings</i>
-        <span class="title teal-text">Preferences</span>
-        <br>
-        <% @customer.preferences&.each do |preference, value| %>
-          <%= preference.to_s.titleize %>: <%= value.to_s.titleize %>
-        <% end %>
-      </li>
-    </ul>
+        <li class="collection-item avatar">
+          <i class="material-icons circle">phone</i>
+          <span class="title teal-text">Phone Number:</span>
+          <%= form.text_field :phone_number %>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
+<% end %>

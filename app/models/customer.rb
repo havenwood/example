@@ -19,12 +19,20 @@ class Customer
   class << self
     def find(id)
       customer = new id: id
-      customer.attributes = Attributes.new Customer::API.retrieve(customer_id: id).to_h
+      customer.attributes = Attributes.new API.retrieve(customer_id: id).to_h
       customer
     end
 
     def list
-      @list ||= Customer::API.list
+      @list ||= API.list
+    end
+
+    def create(attributes)
+      API.create idempotency_key: SecureRandom.uuid, **attributes
+    end
+
+    def update(id, attributes)
+      API.update customer_id: id, **attributes
     end
 
     def delete(id)
@@ -33,12 +41,15 @@ class Customer
     alias destroy delete
   end
 
+  def update(attributes)
+    API.update customer_id: @id, **attributes
+  end
+
   def delete
     API.delete customer_id: @id
   end
   alias destroy delete
 
-  def_delegators 'Customer::API', :create, :update
   def_delegators :@attributes, *FIELDS, *TRAITS
 
   def persisted?

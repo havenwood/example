@@ -1,7 +1,7 @@
 <h1><%= link_to 'Customers', customers_path %></h1>
 
 <div class="row">
-  <div class="col l6">
+  <div class="col l8">
     <%= link_to 'Back', url_for(request.env.fetch('HTTP_REFERER', customers_path)), class: 'btn' %>
     <%= link_to 'Edit', edit_customer_path, class: 'btn blue center' %>
     <%= link_to 'Delete', {controller: :customers, action: 'destroy', id: params[:id]}, method: 'delete', data: {confirm: 'Delete this customer?'}, class: 'btn red right' %>
@@ -9,7 +9,7 @@
 </div>
 
 <div class="row">
-  <div class="col l6">
+  <div class="col l8">
     <ul class="collection with-header">
       <li class="collection-header teal-text">
         <h5>
