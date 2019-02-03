@@ -1,4 +1,4 @@
-<h1><%= link_to 'Customers', customers_path %></h1>
+<h1>Customers</h1>
 
 <%= link_to 'New Customer', new_customer_path, class: 'btn right' %>
 <%== pagy_materialize_responsive_nav(@pagy) %>
@@ -16,8 +16,8 @@
     <% @customers.each do |customer| %>
       <tr>
         <td width="40%" class="monospace"><%= link_to customer[:id], controller: :customers, action: :show, id: customer[:id] %></td>
-        <td width="20%"><%= customer[:given_name].titleize %></td>
-        <td width="20%"><%= customer[:family_name].titleize %></td>
+        <td width="20%"><%= customer[:given_name]&.titleize %></td>
+        <td width="20%"><%= customer[:family_name]&.titleize %></td>
         <td width="20%"><%= customer[:creation_source] %></td>
       </tr>
     <% end %>

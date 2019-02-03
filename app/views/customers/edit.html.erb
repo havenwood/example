@@ -1,75 +1,96 @@
-<h1><%= link_to 'Customers', customers_path %></h1>
+<div class="container">
+  <nav class="grey darken-1">
+    <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
+    <%= link_to [@customer.given_name&.titleize, @customer.family_name&.titleize].join(' '), @customer, class: "breadcrumb" %>
+    <a class="breadcrumb">Edit</a>
+  </nav>
+  <br>
 
-<%= form_with scope: :customer, url: @customer, method: :patch, local: true do |form| %>
-  <div class="row">
-    <div class="col l8">
-      <%= link_to 'Back', url_for(request.env.fetch('HTTP_REFERER', customers_path)), class: 'btn' %>
-      <%= form.submit class: 'btn blue right' %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col l8">
-      <ul class="collection with-header">
-        <li class="collection-item avatar">
-          <i class="material-icons circle">info</i>
-          <span class="title teal-text">Given Name:</span>
-          <%= form.text_field :given_name, value: @customer.given_name %>
-          <span class="title teal-text">Family Name:</span>
-          <%= form.text_field :family_name, value: @customer.family_name %>
-        </li>
-
-        <li class="collection-item avatar">
-          <i class="material-icons circle">perm_identity</i>
-          <span class="title teal-text">ID</span>
-          <br>
-          <%= @customer.id %>
-        </li>
-
-        <li class="collection-item avatar">
-          <span class="title teal-text">Creation Source</span>
-          <br>
-          <%= @customer.creation_source %>
-        </li>
-
-        <li class="collection-item avatar">
-          <i class="material-icons circle">group</i>
-          <span class="title teal-text">Groups</span>
-          <table>
-            <thead>
-              <th>Name</th>
-              <th>ID</th>
-            </thead>
-            <tbody>
-              <% @customer.groups&.each do |id:, name:| %>
-                <tr>
-                  <td><%= name %></td>
-                  <td class="monospace"><%= id.upcase %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          <br>
-        </li>
-
-        <li class="collection-item avatar">
-          <i class="material-icons circle">settings</i>
-          <span class="title teal-text">Preferences</span>
-          <br>
-          <% @customer.preferences&.each do |preference, value| %>
-            <%= preference.to_s.titleize %>: <%= value.to_s.titleize %>
-          <% end %>
-        </li>
-
-        <li class="collection-item avatar">
-          <i class="material-icons circle">history</i>
-          <span class="title teal-text">History</span>
-          <br>
-          Created: <%= time_ago_in_words DateTime.parse @customer.created_at %> ago
-          <br>
-          Updated: <%= time_ago_in_words DateTime.parse @customer.updated_at %> ago
-        </li>
+  <%= form_with scope: :customer, url: @customer, method: :patch, local: true do |form| %>
+    <% flash[:errors]&.each do |errors| %>
+      <ul class="collection">
+        <% errors.each do |error, message| %>
+          <li class="collection-item">
+            <span class="title red-text"><%= error.to_s.titleize %>:</span>
+            <br>
+            <%= message %>
+          </li>
+        <% end %>
       </ul>
-    </div>
-  </div>
-<% end %>
+    <% end %>
+
+    <ul class="collection with-header">
+      <li class="collection-header teal-text">
+        <span class="valign-wrapper right">
+          <%= button_tag class: "btn-floating btn-large waves-effect waves-light green right" do %>
+            <i class="material-icons">save</i>
+          <% end %>
+        </span>
+        <h5><%= @customer.given_name&.titleize %> <%= @customer.family_name&.titleize %></h5>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">contact_mail</i>
+        <span class="title teal-text">Given Name:</span>
+        <%= form.text_field :given_name, value: @customer.given_name, class: "validate", autofocus: true %>
+        <span class="title teal-text">Family Name:</span>
+        <%= form.text_field :family_name, value: @customer.family_name, class: "validate" %>
+        <span class="title teal-text">Email:</span>
+        <%= form.email_field :email_address, value: @customer.email_address, class: "validate" %>
+        <span class="title teal-text">Phone:</span>
+        <%= form.telephone_field :phone_number, value: @customer.phone_number, class: "validate" %>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">perm_identity</i>
+        <span class="title teal-text">ID</span>
+        <br>
+        <%= @customer.id %>
+      </li>
+
+      <li class="collection-item avatar">
+        <span class="title teal-text">Creation Source</span>
+        <br>
+        <%= @customer.creation_source %>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">group</i>
+        <span class="title teal-text">Groups</span>
+        <table>
+          <thead>
+            <th>Name</th>
+            <th>ID</th>
+          </thead>
+          <tbody>
+            <% @customer.groups&.each do |id:, name:| %>
+              <tr>
+                <td><%= name %></td>
+                <td class="monospace"><%= id.upcase %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <br>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">settings</i>
+        <span class="title teal-text">Preferences</span>
+        <br>
+        <% @customer.preferences&.each do |preference, value| %>
+          <%= preference.to_s.titleize %>: <%= value.to_s.titleize %>
+        <% end %>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">history</i>
+        <span class="title teal-text">History</span>
+        <br>
+        Created: <%= time_ago_in_words DateTime.parse @customer.created_at %> ago
+        <br>
+        Updated: <%= time_ago_in_words DateTime.parse @customer.updated_at %> ago
+      </li>
+    </ul>
+  <% end %>
+</div>

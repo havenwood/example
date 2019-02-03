@@ -1,52 +1,58 @@
-<h1><%= link_to 'Customers', customers_path %></h1>
+<div class="container">
+  <nav class="grey darken-1">
+    <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
+    <a class="breadcrumb">New</a>
+  </nav>
+  <br>
 
-<%= form_with scope: :customer, url: customers_path, method: :post, local: true do |form| %>
-  <div class="row">
-    <div class="col l8">
-      <%= link_to 'Back', url_for(request.env.fetch('HTTP_REFERER', customers_path)), class: 'btn' %>
-      <%= form.submit class: 'btn blue right' %>
-    </div>
-  </div>
-
-  <% flash[:errors]&.each do |errors| %>
-    <div class="row">
-      <div class="col l8">
-        <ul class="collection">
-          <% errors.each do |error, message| %>
-            <li class="collection-item">
-              <span class="title red-text"><%= error.to_s.titleize %>:</span>
-              <br>
-              <%= message %>
-            </li>
-          <% end %>
-        </ul>
+  <%= form_with scope: :customer, url: customers_path, method: :post, local: true do |form| %>
+    <% flash[:errors]&.each do |errors| %>
+      <div class="row">
+        <div class="col l8">
+          <ul class="collection">
+            <% errors.each do |error, message| %>
+              <li class="collection-item">
+                <span class="title red-text"><%= error.to_s.titleize %>:</span>
+                <br>
+                <%= message %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
-    </div>
+    <% end %>
+
+    <ul class="collection with-header">
+      <li class="collection-header teal-text">
+        <span class="valign-wrapper right">
+          <%= button_tag class: "btn-floating btn-large waves-effect waves-light green right" do %>
+            <i class="material-icons">save</i>
+          <% end %>
+        </span>
+        <h5>New Customer</h5>
+      </li>
+    </ul>
+
+    <ul class="collection">
+      <li class="collection-item avatar">
+        <i class="material-icons circle">person</i>
+        <span class="title teal-text">Given Name:</span>
+        <%= form.text_field :given_name, class: "validate" %>
+        <span class="title teal-text">Family Name:</span>
+        <%= form.text_field :family_name, class: "validate" %>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">email</i>
+        <span class="title teal-text">Email Address:</span>
+        <%= form.email_field :email_address, class: "validate" %>
+      </li>
+
+      <li class="collection-item avatar">
+        <i class="material-icons circle">phone</i>
+        <span class="title teal-text">Phone Number:</span>
+        <%= form.telephone_field :phone_number, class: "validate" %>
+      </li>
+    </ul>
   <% end %>
-
-  <div class="row">
-    <div class="col l8">
-      <ul class="collection">
-        <li class="collection-item avatar">
-          <i class="material-icons circle">person</i>
-          <span class="title teal-text">Given Name:</span>
-          <%= form.text_field :given_name %>
-          <span class="title teal-text">Family Name:</span>
-          <%= form.text_field :family_name %>
-        </li>
-
-        <li class="collection-item avatar">
-          <i class="material-icons circle">email</i>
-          <span class="title teal-text">Email Address:</span>
-          <%= form.text_field :email_address %>
-        </li>
-
-        <li class="collection-item avatar">
-          <i class="material-icons circle">phone</i>
-          <span class="title teal-text">Phone Number:</span>
-          <%= form.text_field :phone_number %>
-        </li>
-      </ul>
-    </div>
-  </div>
-<% end %>
+</div>

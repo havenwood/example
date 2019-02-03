@@ -17,3 +17,12 @@
 .monospace {
   font-family: 'Roboto Mono', monospace;
 }
+
+.btn-floating {
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+}
+
+.breadcrumb:first-child {
+  margin-left: 1.5rem;
+}

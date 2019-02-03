@@ -28,6 +28,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if response.success?
+        Customer.list.flush_cache
         @customer = Customer.find response.to_h[:id]
 
         format.html { redirect_to @customer, notice: 'Customer was successfully created.' }
@@ -48,10 +49,15 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if response.success?
+        Customer.list.flush_cache
+
         format.html { redirect_to @customer, notice: 'Customer was successfully updated.' }
         format.json { render :show, status: :ok, location: @customer }
       else
-        format.html { render :edit }
+        format.html do
+          flash.now[:errors] = response.errors
+          render :edit
+        end
         format.json { render json: response.errors, status: :unprocessable_entity }
       end
     end
