@@ -1,26 +1,18 @@
 class Customer
-  API = Square.new.customers
-  FIELDS = %i[idempotency_key given_name family_name company_name nickname
-              email_address address phone_number reference_id note birthday]
-  TRAITS = %i[id creation_source groups preferences created_at updated_at]
-  Attributes = Struct.new *FIELDS, *TRAITS, keyword_init: true
-
   include ActiveModel::Model
   extend Forwardable
 
-  attr_accessor :id
-  attr_accessor :attributes
+  API = Square.new.customers
 
-  def initialize(attributes = {})
-    super
-    @attributes = Attributes.new
-  end
+  FIELDS = %i[id idempotency_key given_name family_name company_name nickname
+              email_address address phone_number reference_id note birthday]
+  TRAITS = %i[creation_source groups preferences created_at updated_at]
+
+  attr_accessor *FIELDS, *TRAITS
 
   class << self
     def find(id)
-      customer = new id: id
-      customer.attributes = Attributes.new API.retrieve(customer_id: id).to_h
-      customer
+      new API.retrieve(customer_id: id).to_h
     end
 
     def list
@@ -50,9 +42,8 @@ class Customer
   end
   alias destroy delete
 
-  def_delegators :@attributes, *FIELDS, *FIELDS.map { |field| "#{field}="}, *TRAITS
-
   def persisted?
-    @attributes.any?
+    # TODO: Actually relect whether this is persisted.
+    true
   end
 end
