@@ -7,8 +7,17 @@
   <br>
 
   <%= form_with scope: :customer, url: @customer, method: :patch, local: true do |form| %>
-    <% flash[:errors]&.each do |errors| %>
-      <ul class="collection">
+    <ul class="collection with-header">
+      <li class="collection-header teal-text">
+        <span class="valign-wrapper right">
+          <%= button_tag class: "btn-floating btn-large waves-effect waves-light green darken-1", data: { disable_with: "..." } do %>
+            <i class="material-icons">save</i>
+          <% end %>
+        </span>
+        <h5><%= @customer.given_name&.titleize %> <%= @customer.family_name&.titleize %></h5>
+      </li>
+
+      <% flash[:errors]&.each do |errors| %>
         <% errors.each do |error, message| %>
           <li class="collection-item">
             <span class="title red-text"><%= error.to_s.titleize %>:</span>
@@ -16,18 +25,7 @@
             <%= message %>
           </li>
         <% end %>
-      </ul>
-    <% end %>
-
-    <ul class="collection with-header">
-      <li class="collection-header teal-text">
-        <span class="valign-wrapper right">
-          <%= button_tag class: "btn-floating btn-large waves-effect waves-light green right" do %>
-            <i class="material-icons">save</i>
-          <% end %>
-        </span>
-        <h5><%= @customer.given_name&.titleize %> <%= @customer.family_name&.titleize %></h5>
-      </li>
+      <% end %>
 
       <li class="collection-item avatar">
         <i class="material-icons circle">contact_mail</i>

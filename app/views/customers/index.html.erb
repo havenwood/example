@@ -1,12 +1,11 @@
 <h1>Customers</h1>
 
-<%= link_to 'New Customer', new_customer_path, class: 'btn right' %>
+<%= link_to '<i class="material-icons">person_add</i>'.html_safe, new_customer_path, class: 'btn-floating btn-large waves-effect waves-light blue right' %>
 <%== pagy_materialize_responsive_nav(@pagy) %>
-
-<table class="highlight">
+<table class="highlight responsive-table">
   <thead>
     <tr>
-      <% %i[id given_name family_name creation_source].each do |th| %>
+      <% %i[id given_name family_name email_address phone_number creation_source].each do |th| %>
         <th><%= th.to_s.titleize %></th>
       <% end %>
     </tr>
@@ -15,10 +14,12 @@
   <tbody>
     <% @customers.each do |customer| %>
       <tr>
-        <td width="40%" class="monospace"><%= link_to customer[:id], controller: :customers, action: :show, id: customer[:id] %></td>
-        <td width="20%"><%= customer[:given_name]&.titleize %></td>
-        <td width="20%"><%= customer[:family_name]&.titleize %></td>
-        <td width="20%"><%= customer[:creation_source] %></td>
+        <td width="25%" class="monospace"><%= link_to customer[:id], controller: :customers, action: :show, id: customer[:id] %></td>
+        <td width="15%"><%= customer[:given_name]&.titleize %></td>
+        <td width="15%"><%= customer[:family_name]&.titleize %></td>
+        <td width="20%"><%= customer[:email_address] %></td>
+        <td width="15%"><%= customer[:phone_number] %></td>
+        <td width="10%"><%= customer[:creation_source] %></td>
       </tr>
     <% end %>
   </tbody>
