@@ -50,7 +50,7 @@ class Customer
   end
   alias destroy delete
 
-  def_delegators :@attributes, *FIELDS, *TRAITS
+  def_delegators :@attributes, *FIELDS, *FIELDS.map { |field| "#{field}="}, *TRAITS
 
   def persisted?
     @attributes.any?
