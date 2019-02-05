@@ -57,7 +57,7 @@ class Customer
 
   def update(attributes)
     response = self.class.update @id, attributes
-    return response.errors unless response.success?
+    return response.errors if response.error?
 
     self.attributes = response.to_h
     changes_applied
@@ -66,15 +66,20 @@ class Customer
   end
 
   def delete
-    self.class.delete @id
+    response = self.class.delete @id
+    return response.errors if response.error?
+
+    self
   end
   alias destroy delete
 
   def save
+    # Update
     return update changed_attributes if @persisted
 
+    # Create
     response = self.class.create attributes
-    return response.errors unless response.success?
+    return response.errors if response.error?
 
     @persisted = true
     self.attributes = response.to_h
@@ -88,6 +93,6 @@ class Customer
   end
 
   def attributes
-    FIELDS.to_h { |key| [key.to_s, public_send(key)] }.compact
+    ATTRIBUTES.to_h { |key| [key.to_s, public_send(key)] }.compact
   end
 end
