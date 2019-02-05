@@ -75,7 +75,7 @@ class Customer
 
   def save
     # Update
-    return update changed_attributes if @persisted
+    return update changes.transform_values(&:last) if @persisted
 
     # Create
     response = self.class.create attributes
