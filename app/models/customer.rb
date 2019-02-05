@@ -4,6 +4,7 @@ class Customer
   include ActiveModel::Model
   include ActiveModel::Serialization
   include ActiveModel::Serializers::JSON
+  extend Enumerable
 
   API = Square.new.customers
 
@@ -55,6 +56,12 @@ class Customer
       API.delete customer_id: id
     end
     alias destroy delete
+
+    def each
+      Customer.list.lazy.flat_map(&:to_a).each do |customer|
+        yield Customer.find customer[:id]
+      end
+    end
   end
 
   def update(attributes)
