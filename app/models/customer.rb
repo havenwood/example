@@ -1,18 +1,33 @@
 class Customer
+  include ActiveModel::AttributeMethods
+  include ActiveModel::Dirty
   include ActiveModel::Model
-  extend Forwardable
+  include ActiveModel::Serialization
+  include ActiveModel::Serializers::JSON
 
   API = Square.new.customers
 
-  FIELDS = %i[id idempotency_key given_name family_name company_name nickname
+  TRAITS = %i[id creation_source groups preferences created_at updated_at]
+  FIELDS = %i[idempotency_key given_name family_name company_name nickname
               email_address address phone_number reference_id note birthday]
-  TRAITS = %i[creation_source groups preferences created_at updated_at]
+  ATTRIBUTES = TRAITS + FIELDS
 
-  attr_accessor *FIELDS, *TRAITS
+  define_attribute_methods *ATTRIBUTES
+
+  attr_reader *ATTRIBUTES
+  attr_accessor :persisted
+
+  def initialize(attributes = {})
+    @persisted = false
+    super
+  end
 
   class << self
     def find(id)
-      new API.retrieve(customer_id: id).to_h
+      new(API.retrieve(customer_id: id).to_h).tap do |customer|
+        customer.persisted = true
+        customer.changes_applied
+      end
     end
 
     def list
@@ -20,11 +35,11 @@ class Customer
     end
 
     def create(attributes)
-      API.create idempotency_key: SecureRandom.uuid, **attributes
+      API.create idempotency_key: SecureRandom.uuid, **attributes.to_h.symbolize_keys
     end
 
     def update(id, attributes)
-      API.update customer_id: id, **attributes
+      API.update customer_id: id, **attributes.to_h.symbolize_keys
     end
 
     def delete(id)
@@ -33,17 +48,46 @@ class Customer
     alias destroy delete
   end
 
+  ATTRIBUTES.each do |field|
+    define_method "#{field}=" do |value|
+      public_send "#{field}_will_change!"
+      instance_variable_set "@#{field}", value
+    end
+  end
+
   def update(attributes)
-    API.update customer_id: @id, **attributes
+    response = self.class.update @id, attributes
+    return response.errors unless response.success?
+
+    self.attributes = response.to_h
+    changes_applied
+
+    self
   end
 
   def delete
-    API.delete customer_id: @id
+    self.class.delete @id
   end
   alias destroy delete
 
+  def save
+    return update changed_attributes if @persisted
+
+    response = self.class.create attributes
+    return response.errors unless response.success?
+
+    @persisted = true
+    self.attributes = response.to_h
+    changes_applied
+
+    self
+  end
+
   def persisted?
-    # TODO: Actually relect whether this is persisted.
-    true
+    @persisted
+  end
+
+  def attributes
+    FIELDS.to_h { |key| [key.to_s, public_send(key)] }.compact
   end
 end

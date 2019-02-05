@@ -45,10 +45,9 @@ class CustomersController < ApplicationController
 
   def update
     @customer = Customer.find params[:id]
-    response = @customer.update customer_params
 
     respond_to do |format|
-      if response.success?
+      if @customer.update customer_params
         Customer.list.flush_cache
 
         format.html { redirect_to @customer, notice: 'Customer was successfully updated.' }
@@ -76,6 +75,6 @@ class CustomersController < ApplicationController
   private
 
   def customer_params
-    params.require(:customer).permit(Customer::FIELDS).to_h.symbolize_keys
+    params.require(:customer).permit(Customer::FIELDS)
   end
 end
