@@ -12,10 +12,18 @@ class Customer
               email_address address phone_number reference_id note birthday]
   ATTRIBUTES = TRAITS + FIELDS
 
-  define_attribute_methods *ATTRIBUTES
+  attr_accessor :persisted
 
   attr_reader *ATTRIBUTES
-  attr_accessor :persisted
+
+  ATTRIBUTES.each do |field|
+    define_method "#{field}=" do |value|
+      public_send "#{field}_will_change!"
+      instance_variable_set "@#{field}", value
+    end
+  end
+
+  define_attribute_methods *ATTRIBUTES
 
   def initialize(attributes = {})
     @persisted = false
@@ -46,13 +54,6 @@ class Customer
       API.delete customer_id: id
     end
     alias destroy delete
-  end
-
-  ATTRIBUTES.each do |field|
-    define_method "#{field}=" do |value|
-      public_send "#{field}_will_change!"
-      instance_variable_set "@#{field}", value
-    end
   end
 
   def update(attributes)
