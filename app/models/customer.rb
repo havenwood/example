@@ -15,8 +15,9 @@ class Customer
   attr_accessor :persisted
 
   attr_reader *ATTRIBUTES
+  attr_writer *TRAITS
 
-  ATTRIBUTES.each do |field|
+  FIELDS.each do |field|
     define_method "#{field}=" do |value|
       public_send "#{field}_will_change!"
       instance_variable_set "@#{field}", value
