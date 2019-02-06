@@ -19,7 +19,7 @@ class Customer
   ATTRIBUTES = TRAITS + FIELDS
 
   attribute :id, :string
-  attribute :creation_source
+  attribute :creation_source, :string
   attribute :groups
   attribute :preferences
   attribute :created_at, :datetime
