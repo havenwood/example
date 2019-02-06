@@ -45,9 +45,10 @@ class CustomersController < ApplicationController
 
   def update
     @customer = Customer.find params[:id]
+    response = Customer.update @customer.id, customer_params
 
     respond_to do |format|
-      if @customer.update customer_params
+      if response.success?
         Customer.list.flush_cache
 
         format.html { redirect_to @customer, notice: 'Customer was successfully updated.' }

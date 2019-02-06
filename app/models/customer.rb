@@ -1,8 +1,14 @@
 class Customer
+  include ActiveModel::AttributeAssignment
   include ActiveModel::Attributes
+  include ActiveModel::Conversion
   include ActiveModel::Dirty
-  include ActiveModel::Model
   include ActiveModel::Serializers::JSON
+  include ActiveModel::Validations
+
+  extend ActiveModel::Naming
+  extend ActiveModel::Translation
+  extend ActiveSupport::Concern
   extend Enumerable
 
   API = Square.new.customers
@@ -12,30 +18,40 @@ class Customer
               phone_number reference_id note birthday idempotency_key]
   ATTRIBUTES = TRAITS + FIELDS
 
-  attr_accessor :persisted
+  attribute :id, :string
+  attribute :creation_source
+  attribute :groups
+  attribute :preferences
+  attribute :created_at, :datetime
+  attribute :updated_at, :datetime
 
-  attr_reader *ATTRIBUTES
-  attr_writer *TRAITS
+  FIELDS.each do |field|
+    attribute field, :string
+  end
+
+  attr_accessor :persisted
 
   FIELDS.each do |field|
     define_method "#{field}=" do |value|
       public_send "#{field}_will_change!"
-      instance_variable_set "@#{field}", value
+      super(value)
     end
   end
 
   attribute_method_suffix '?'
 
-  define_attribute_methods *ATTRIBUTES
+  define_attribute_methods *FIELDS
 
   def attribute?(attr)
     public_send(attr).present?
   end
 
   def initialize(attributes = {})
-    yield self if block_given?
+    super()
+
     @persisted = false
-    super
+    assign_attributes(attributes) if attributes
+    yield self if block_given?
   end
 
   class << self
@@ -72,7 +88,7 @@ class Customer
   end
 
   def update(attributes)
-    response = self.class.update @id, attributes
+    response = self.class.update id, attributes
     raise response.errors.inspect if response.error?
 
     self.attributes = response.to_h
@@ -82,7 +98,7 @@ class Customer
   end
 
   def delete
-    response = self.class.delete @id
+    response = self.class.delete id
     raise response.errors.inspect if response.error?
 
     @persisted = false
@@ -101,7 +117,7 @@ class Customer
     end
 
     # Create
-    response = self.class.create attributes
+    response = self.class.create changes.transform_values(&:last)
     return false if response.error?
 
     @persisted = true
@@ -116,7 +132,7 @@ class Customer
     return update changes.transform_values(&:last) if @persisted
 
     # Create
-    response = self.class.create attributes
+    response = self.class.create changes.transform_values(&:last)
     raise response.errors.inspect if response.error?
 
     @persisted = true
@@ -128,10 +144,6 @@ class Customer
 
   def persisted?
     @persisted
-  end
-
-  def attributes
-    ATTRIBUTES.to_h { |key| [key.to_s, public_send(key)] }.compact
   end
 
   def pretty_print(pp)

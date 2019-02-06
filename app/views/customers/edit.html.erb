@@ -85,9 +85,9 @@
         <i class="material-icons circle">history</i>
         <span class="title teal-text">History</span>
         <br>
-        Created: <%= time_ago_in_words DateTime.parse @customer.created_at %> ago
+        Created: <%= time_ago_in_words @customer.created_at %> ago
         <br>
-        Updated: <%= time_ago_in_words DateTime.parse @customer.updated_at %> ago
+        Updated: <%= time_ago_in_words @customer.updated_at %> ago
       </li>
     </ul>
   <% end %>
