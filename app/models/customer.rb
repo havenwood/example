@@ -9,8 +9,8 @@ class Customer
   API = Square.new.customers
 
   TRAITS = %i[id creation_source groups preferences created_at updated_at]
-  FIELDS = %i[idempotency_key given_name family_name company_name nickname
-              email_address address phone_number reference_id note birthday]
+  FIELDS = %i[given_name family_name company_name nickname email_address address
+              phone_number reference_id note birthday idempotency_key]
   ATTRIBUTES = TRAITS + FIELDS
 
   attr_accessor :persisted
@@ -131,10 +131,17 @@ class Customer
     pp.object_address_group self do
       pp.breakable
 
-      attrs = ATTRIBUTES.flat_map do |attr|
-        [[:text, "#{attr}=#{instance_variable_get("@#{attr}").inspect}"], [:comma_breakable]]
+      pp.text "id=#{id.inspect}"
+      pp.comma_breakable
+
+      attrs = FIELDS.flat_map do |field|
+        pp.text "#{field}=#{public_send(field).inspect}"
+        pp.comma_breakable
       end
-      attrs[0..-2].each { |meth, *args| pp.public_send meth, *args }
+
+      pp.text "created_at=#{created_at.inspect}"
+      pp.comma_breakable
+      pp.text "updated_at=#{updated_at.inspect}"
     end
   end
 end
