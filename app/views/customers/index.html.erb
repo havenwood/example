@@ -15,12 +15,12 @@
   <tbody>
     <% @customers.each do |customer| %>
       <tr>
-        <td width="25%" class="monospace"><%= link_to customer[:id], controller: :customers, action: :show, id: customer[:id] %></td>
-        <td width="15%"><%= customer[:given_name]&.titleize %></td>
-        <td width="15%"><%= customer[:family_name]&.titleize %></td>
-        <td width="20%"><%= customer[:email_address] %></td>
-        <td width="15%"><%= customer[:phone_number] %></td>
-        <td width="10%"><%= customer[:creation_source] %></td>
+        <td width="25%" class="monospace"><%= link_to customer.id, controller: :customers, action: :show, id: customer.id %></td>
+        <td width="15%"><%= customer.given_name&.titleize %></td>
+        <td width="15%"><%= customer.family_name&.titleize %></td>
+        <td width="20%"><%= customer.email_address %></td>
+        <td width="15%"><%= customer.phone_number %></td>
+        <td width="10%"><%= customer.creation_source %></td>
       </tr>
     <% end %>
   </tbody>

@@ -6,7 +6,7 @@ class CustomersController < ApplicationController
   def index
     page = Integer params.fetch :page, 1
 
-    @customers = Customer.list.paginate page: page, per_page: PER_PAGE
+    @customers = Customer.paginate page: page, per_page: PER_PAGE
     @pagy = Pagy::Countless.new page: page, items: PER_PAGE
     @pagy.finalize @customers.size.succ
   end

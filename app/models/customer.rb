@@ -66,6 +66,12 @@ class Customer
       @list ||= API.list
     end
 
+    def paginate(**keywords)
+      list.paginate(keywords).map do |customer|
+        Customer.new customer
+      end
+    end
+
     def create(attributes = OpenStruct.new)
       yield attributes if block_given?
       API.create idempotency_key: SecureRandom.uuid, **attributes.to_h.symbolize_keys
