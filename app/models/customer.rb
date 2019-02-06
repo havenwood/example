@@ -156,17 +156,19 @@ class Customer
     pp.object_address_group self do
       pp.breakable
 
-      pp.text "id=#{id.inspect}"
-      pp.comma_breakable
+      TRAITS.each do |trait|
+        pp.text "#{trait}: #{public_send(trait).inspect}"
+        pp.comma_breakable
+      end
 
-      attrs = FIELDS.flat_map do |field|
+      *head, tail = FIELDS
+
+      head.each do |field|
         pp.text "#{field}=#{public_send(field).inspect}"
         pp.comma_breakable
       end
 
-      pp.text "created_at=#{created_at.inspect}"
-      pp.comma_breakable
-      pp.text "updated_at=#{updated_at.inspect}"
+      pp.text "#{tail}=#{public_send(tail).inspect}"
     end
   end
 end
