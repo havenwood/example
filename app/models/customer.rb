@@ -126,4 +126,15 @@ class Customer
   def attributes
     ATTRIBUTES.to_h { |key| [key.to_s, public_send(key)] }.compact
   end
+
+  def pretty_print(pp)
+    pp.object_address_group self do
+      pp.breakable
+
+      attrs = ATTRIBUTES.flat_map do |attr|
+        [[:text, "#{attr}=#{instance_variable_get("@#{attr}").inspect}"], [:comma_breakable]]
+      end
+      attrs[0..-2].each { |meth, *args| pp.public_send meth, *args }
+    end
+  end
 end
