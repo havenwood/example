@@ -2,7 +2,6 @@ class Customer
   include ActiveModel::AttributeMethods
   include ActiveModel::Dirty
   include ActiveModel::Model
-  include ActiveModel::Serialization
   include ActiveModel::Serializers::JSON
   extend Enumerable
 
