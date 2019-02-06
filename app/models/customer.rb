@@ -28,6 +28,7 @@ class Customer
   define_attribute_methods *ATTRIBUTES
 
   def initialize(attributes = {})
+    yield self if block_given?
     @persisted = false
     super
   end
@@ -44,7 +45,8 @@ class Customer
       @list ||= API.list
     end
 
-    def create(attributes)
+    def create(attributes = OpenStruct.new)
+      yield attributes if block_given?
       API.create idempotency_key: SecureRandom.uuid, **attributes.to_h.symbolize_keys
     end
 
@@ -66,7 +68,7 @@ class Customer
 
   def update(attributes)
     response = self.class.update @id, attributes
-    return response.errors if response.error?
+    raise response.errors.inspect if response.error?
 
     self.attributes = response.to_h
     changes_applied
@@ -76,7 +78,7 @@ class Customer
 
   def delete
     response = self.class.delete @id
-    return response.errors if response.error?
+    raise response.errors.inspect if response.error?
 
     self
   end
@@ -84,11 +86,31 @@ class Customer
 
   def save
     # Update
+    if @persisted
+      return begin
+        update changes.transform_values(&:last)
+      rescue
+      end
+    end
+
+    # Create
+    response = self.class.create attributes
+    return false if response.error?
+
+    @persisted = true
+    self.attributes = response.to_h
+    changes_applied
+
+    self
+  end
+
+  def save!
+    # Update
     return update changes.transform_values(&:last) if @persisted
 
     # Create
     response = self.class.create attributes
-    return response.errors if response.error?
+    raise response.errors.inspect if response.error?
 
     @persisted = true
     self.attributes = response.to_h
