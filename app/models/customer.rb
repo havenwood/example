@@ -1,5 +1,5 @@
 class Customer
-  include ActiveModel::AttributeMethods
+  include ActiveModel::Attributes
   include ActiveModel::Dirty
   include ActiveModel::Model
   include ActiveModel::Serializers::JSON
@@ -24,7 +24,13 @@ class Customer
     end
   end
 
+  attribute_method_suffix '?'
+
   define_attribute_methods *ATTRIBUTES
+
+  def attribute?(attr)
+    public_send(attr).present?
+  end
 
   def initialize(attributes = {})
     yield self if block_given?
