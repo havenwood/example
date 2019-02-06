@@ -79,6 +79,8 @@ class Customer
     response = self.class.delete @id
     raise response.errors.inspect if response.error?
 
+    @persisted = false
+
     self
   end
   alias destroy delete
