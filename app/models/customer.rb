@@ -156,19 +156,25 @@ class Customer
     pp.object_address_group self do
       pp.breakable
 
-      TRAITS.each do |trait|
-        pp.text "#{trait}: #{public_send(trait).inspect}"
+      attributes.symbolize_keys.slice(*Customer::TRAITS).each do |field, value|
+        pp.text "#{field}: #{value.inspect}"
         pp.comma_breakable
       end
 
       *head, tail = FIELDS
 
-      head.each do |field|
-        pp.text "#{field}=#{public_send(field).inspect}"
+      attributes.symbolize_keys.slice(*Customer::FIELDS).each do |field, value|
+        pp.text "#{field}=#{value.inspect}"
         pp.comma_breakable
       end
 
       pp.text "#{tail}=#{public_send(tail).inspect}"
     end
+  end
+
+  def inspect
+    attrs = attributes.map { |field, value| "#{field}: #{value.inspect}" }.join(', ')
+
+    "#<#{self.class}:#{sprintf "%#018x", object_id << 1} #{attrs}>"
   end
 end
