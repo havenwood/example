@@ -56,7 +56,10 @@ class Customer
 
   class << self
     def find(id)
-      new(API.retrieve(customer_id: id).to_h).tap do |customer|
+      customer = API.retrieve customer_id: id
+      raise KeyError, "no customer found for id `#{id}'" unless customer.success?
+
+      new(customer.to_h).tap do |customer|
         customer.persisted = true
         customer.changes_applied
       end
