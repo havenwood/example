@@ -1,4 +1,7 @@
-<h1>Customers</h1>
+<nav>
+  <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
+</nav>
+<br>
 
 <%= link_to '<i class="material-icons">person_add</i>'.html_safe, new_customer_path, class: 'btn-floating btn-large waves-effect waves-light blue right' %>
 <%== pagy_materialize_nav(@pagy) %>

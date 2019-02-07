@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Example</title>
+    <title>Square Ruby SDK</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
+    <nav>
+      <div class="nav-wrapper">
+        <div class="brand-logo">
+        </div>
+        <ul>
+          <li><%= link_to 'Customers', customers_path, class: "grey-text text-darken-2" %></li>
+        </ul>
+      </div>
+    </nav>
     <div class="container">
-      <br>
-      <%= yield %>
+      <div class="container">
+        <%= yield %>
+      </div>
     </div>
   </body>
 

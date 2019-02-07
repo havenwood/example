@@ -1,52 +1,50 @@
-<div class="container">
-  <nav class="grey darken-1">
-    <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
-    <a class="breadcrumb">New</a>
-  </nav>
-  <br>
+<nav>
+  <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
+  <a class="breadcrumb">New</a>
+</nav>
+<br>
 
-  <%= form_with scope: :customer, url: customers_path, method: :post, local: true do |form| %>
-    <ul class="collection with-header">
-      <li class="collection-header teal-text">
-        <span class="valign-wrapper right">
-          <%= button_tag class: "btn-floating btn-large waves-effect waves-light green darken-1", data: { disable_with: "..." } do %>
-            <i class="material-icons">save</i>
-          <% end %>
-        </span>
-        <h5>New Customer</h5>
-      </li>
+<%= form_with scope: :customer, url: customers_path, method: :post, local: true do |form| %>
+  <ul class="collection with-header">
+    <li class="collection-header teal-text">
+      <span class="valign-wrapper right">
+        <%= button_tag class: "btn-floating btn-large waves-effect waves-light green darken-1", data: { disable_with: "..." } do %>
+          <i class="material-icons">save</i>
+        <% end %>
+      </span>
+      <h5>New Customer</h5>
+    </li>
 
-      <% flash[:errors]&.each do |errors| %>
-          <% errors.each do |error, message| %>
-            <li class="collection-item">
-              <span class="title red-text"><%= error.to_s.titleize %>:</span>
-              <br>
-              <%= message %>
-            </li>
-          <% end %>
-      <% end %>
-    </ul>
+    <% flash[:errors]&.each do |errors| %>
+        <% errors.each do |error, message| %>
+          <li class="collection-item">
+            <span class="title red-text"><%= error.to_s.titleize %>:</span>
+            <br>
+            <%= message %>
+          </li>
+        <% end %>
+    <% end %>
+  </ul>
 
-    <ul class="collection">
-      <li class="collection-item avatar">
-        <i class="material-icons circle">person</i>
-        <span class="title teal-text">Given Name:</span>
-        <%= form.text_field :given_name, class: "validate", autofocus: true %>
-        <span class="title teal-text">Family Name:</span>
-        <%= form.text_field :family_name, class: "validate" %>
-      </li>
+  <ul class="collection">
+    <li class="collection-item avatar">
+      <i class="material-icons circle">person</i>
+      <span class="title teal-text">Given Name:</span>
+      <%= form.text_field :given_name, class: "validate", autofocus: true %>
+      <span class="title teal-text">Family Name:</span>
+      <%= form.text_field :family_name, class: "validate" %>
+    </li>
 
-      <li class="collection-item avatar">
-        <i class="material-icons circle">email</i>
-        <span class="title teal-text">Email Address:</span>
-        <%= form.email_field :email_address, class: "validate" %>
-      </li>
+    <li class="collection-item avatar">
+      <i class="material-icons circle">email</i>
+      <span class="title teal-text">Email Address:</span>
+      <%= form.email_field :email_address, class: "validate" %>
+    </li>
 
-      <li class="collection-item avatar">
-        <i class="material-icons circle">phone</i>
-        <span class="title teal-text">Phone Number:</span>
-        <%= form.telephone_field :phone_number, class: "validate" %>
-      </li>
-    </ul>
-  <% end %>
-</div>
+    <li class="collection-item avatar">
+      <i class="material-icons circle">phone</i>
+      <span class="title teal-text">Phone Number:</span>
+      <%= form.telephone_field :phone_number, class: "validate" %>
+    </li>
+  </ul>
+<% end %>

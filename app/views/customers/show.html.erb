@@ -1,82 +1,78 @@
-<div class="container">
-  <nav class="grey darken-1">
-    <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
-    <a class="breadcrumb"><%= @customer.given_name&.titleize %> <%= @customer.family_name&.titleize %></a>
-  </nav>
-  <br>
+<nav>
+  <%= link_to 'Customers', customers_path, class: 'breadcrumb' %>
+  <a class="breadcrumb"><%= @customer.given_name&.titleize %> <%= @customer.family_name&.titleize %></a>
+</nav>
+<ul class="collection with-header">
+  <li class="collection-header teal-text">
+    <span class="valign-wrapper right">
+      <%= link_to '<i class="material-icons">delete</i>'.html_safe, {controller: :customers, action: 'destroy', id: params[:id]}, method: 'delete', data: {confirm: 'Delete this customer?'}, class: 'btn-floating waves-effect waves-light red darken-3' %>
+      <%= link_to '<i class="material-icons">edit</i>'.html_safe, edit_customer_path, class: 'btn-floating btn-large waves-effect waves-light blue' %>
+    </span>
+    <h5>
+      <%= @customer.given_name&.titleize %>
+      <%= @customer.family_name&.titleize %>
+    </h5>
+  </li>
 
-  <ul class="collection with-header">
-    <li class="collection-header teal-text">
-      <span class="valign-wrapper right">
-        <%= link_to '<i class="material-icons">delete</i>'.html_safe, {controller: :customers, action: 'destroy', id: params[:id]}, method: 'delete', data: {confirm: 'Delete this customer?'}, class: 'btn-floating waves-effect waves-light red darken-3' %>
-        <%= link_to '<i class="material-icons">edit</i>'.html_safe, edit_customer_path, class: 'btn-floating btn-large waves-effect waves-light blue' %>
-      </span>
-      <h5>
-        <%= @customer.given_name&.titleize %>
-        <%= @customer.family_name&.titleize %>
-      </h5>
-    </li>
+  <li class="collection-item avatar">
+    <i class="material-icons circle">contact_mail</i>
+    <span class="title teal-text">Email</span>
+    <br>
+    <%= @customer.email_address %>
+    <br>
+    <br>
+    <span class="title teal-text">Phone</span>
+    <br>
+    <%= @customer.phone_number %>
+  </li>
 
-    <li class="collection-item avatar">
-      <i class="material-icons circle">contact_mail</i>
-      <span class="title teal-text">Email</span>
-      <br>
-      <%= @customer.email_address %>
-      <br>
-      <br>
-      <span class="title teal-text">Phone</span>
-      <br>
-      <%= @customer.phone_number %>
-    </li>
+  <li class="collection-item avatar">
+    <i class="material-icons circle">perm_identity</i>
+    <span class="title teal-text">ID</span>
+    <br>
+    <%= @customer.id %>
+    <br>
+    <br>
+    <span class="title teal-text">Creation Source</span>
+    <br>
+    <%= @customer.creation_source %>
+  </li>
 
-    <li class="collection-item avatar">
-      <i class="material-icons circle">perm_identity</i>
-      <span class="title teal-text">ID</span>
-      <br>
-      <%= @customer.id %>
-      <br>
-      <br>
-      <span class="title teal-text">Creation Source</span>
-      <br>
-      <%= @customer.creation_source %>
-    </li>
+  <li class="collection-item avatar">
+    <i class="material-icons circle">group</i>
+    <span class="title teal-text">Groups</span>
+    <table>
+      <thead>
+        <th>Name</th>
+        <th>ID</th>
+      </thead>
+      <tbody>
+        <% @customer.groups&.each do |id:, name:| %>
+          <tr>
+            <td><%= name %></td>
+            <td class="monospace"><%= id.upcase %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <br>
+  </li>
 
-    <li class="collection-item avatar">
-      <i class="material-icons circle">group</i>
-      <span class="title teal-text">Groups</span>
-      <table>
-        <thead>
-          <th>Name</th>
-          <th>ID</th>
-        </thead>
-        <tbody>
-          <% @customer.groups&.each do |id:, name:| %>
-            <tr>
-              <td><%= name %></td>
-              <td class="monospace"><%= id.upcase %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <br>
-    </li>
+  <li class="collection-item avatar">
+    <i class="material-icons circle">settings</i>
+    <span class="title teal-text">Preferences</span>
+    <br>
+    <% @customer.preferences&.each do |preference, value| %>
+      <%= preference.to_s.titleize %>: <%= value.to_s.titleize %>
+    <% end %>
+  </li>
 
-    <li class="collection-item avatar">
-      <i class="material-icons circle">settings</i>
-      <span class="title teal-text">Preferences</span>
-      <br>
-      <% @customer.preferences&.each do |preference, value| %>
-        <%= preference.to_s.titleize %>: <%= value.to_s.titleize %>
-      <% end %>
-    </li>
-
-    <li class="collection-item avatar">
-      <i class="material-icons circle">history</i>
-      <span class="title teal-text">History</span>
-      <br>
-      Created: <%= time_ago_in_words @customer.created_at %> ago
-      <br>
-      Updated: <%= time_ago_in_words @customer.updated_at %> ago
-    </li>
-  </ul>
-</div>
+  <li class="collection-item avatar">
+    <i class="material-icons circle">history</i>
+    <span class="title teal-text">History</span>
+    <br>
+    Created: <%= time_ago_in_words @customer.created_at %> ago
+    <br>
+    Updated: <%= time_ago_in_words @customer.updated_at %> ago
+  </li>
+</ul>
