@@ -66,8 +66,8 @@ class Customer
       @list ||= API.list
     end
 
-    def paginate(**keywords)
-      list.paginate(keywords).map do |customer|
+    def paginate(page:, per_page: 25)
+      list.paginate(page: page, per_page: per_page).map do |customer|
         Customer.new customer
       end
     end
@@ -161,14 +161,14 @@ class Customer
         pp.comma_breakable
       end
 
-      *head, tail = FIELDS
+      *head, tail = attributes.symbolize_keys.slice(*Customer::FIELDS).to_a
 
-      attributes.symbolize_keys.slice(*Customer::FIELDS).each do |field, value|
+      head.each do |field, value|
         pp.text "#{field}=#{value.inspect}"
         pp.comma_breakable
       end
 
-      pp.text "#{tail}=#{public_send(tail).inspect}"
+      pp.text "#{tail.first}=#{tail.last.inspect}"
     end
   end
 
