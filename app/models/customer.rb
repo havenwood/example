@@ -71,7 +71,7 @@ class Customer
 
     def paginate(page:, per_page: 25)
       list.paginate(page: page, per_page: per_page).map do |customer|
-        Customer.new customer
+        new customer
       end
     end
 
@@ -90,8 +90,8 @@ class Customer
     alias destroy delete
 
     def each
-      Customer.list.lazy.flat_map(&:to_a).each do |customer|
-        yield Customer.find customer[:id]
+      list.lazy.flat_map(&:to_a).each do |customer|
+        yield find customer[:id]
       end
     end
   end
@@ -159,12 +159,12 @@ class Customer
     pp.object_address_group self do
       pp.breakable
 
-      attributes.symbolize_keys.slice(*Customer::TRAITS).each do |field, value|
+      attributes.symbolize_keys.slice(*self.class::TRAITS).each do |field, value|
         pp.text "#{field}: #{value.inspect}"
         pp.comma_breakable
       end
 
-      *head, tail = attributes.symbolize_keys.slice(*Customer::FIELDS).to_a
+      *head, tail = attributes.symbolize_keys.slice(*self.class::FIELDS).to_a
 
       head.each do |field, value|
         pp.text "#{field}=#{value.inspect}"
