@@ -1,7 +1,7 @@
 class CustomersController < ApplicationController
   include Pagy::Backend
 
-  PER_PAGE = 25
+  PER_PAGE = 15
 
   def index
     page = Integer params.fetch :page, 1
