@@ -1,0 +1,31 @@
+<nav>
+  <%= link_to 'Items', items_path, class: 'breadcrumb' %>
+</nav>
+<br>
+
+<%= link_to '<i class="material-icons">person_add</i>'.html_safe, new_item_path, class: 'btn-floating btn-large waves-effect waves-light blue right' %>
+<%== pagy_materialize_nav(@pagy) %>
+
+<table class="highlight responsive-table">
+  <thead>
+    <tr>
+      <% %i[id type name version description].each do |th| %>
+        <th><%= th.to_s.titleize %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td width="25%" class="monospace">
+          <%= link_to item.id, controller: :items, action: :show, id: item.id %>
+        </td>
+        <td width="15%"><%= item.type&.titleize %></td>
+        <td width="15%"><%= item.item_data[:name] %></td>
+        <td width="20%"><%= item.version %></td>
+        <td width="15%"><%= item.item_data[:description] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

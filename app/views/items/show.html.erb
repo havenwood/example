@@ -1,0 +1,59 @@
+<nav>
+  <%= link_to 'Items', items_path, class: 'breadcrumb' %>
+  <a class="breadcrumb"><%= @item.type %></a>
+</nav>
+<ul class="collection with-header">
+  <li class="collection-header teal-text">
+    <span class="valign-wrapper right">
+      <%= link_to '<i class="material-icons">delete</i>'.html_safe, {controller: :items, action: 'destroy', id: params[:id]}, method: 'delete', data: {confirm: 'Delete this item?'}, class: 'btn-floating waves-effect waves-light red darken-3' %>
+      <%= link_to '<i class="material-icons">edit</i>'.html_safe, edit_item_path, class: 'btn-floating btn-large waves-effect waves-light blue' %>
+    </span>
+    <h5>
+      <%= @item.type %>
+    </h5>
+  </li>
+
+  <li class="collection-item avatar">
+    <i class="material-icons circle">contact_mail</i>
+    <span class="title teal-text">Name</span>
+    <br>
+    <%= @item.type %>
+  </li>
+
+  <li class="collection-item avatar">
+    <i class="material-icons circle">perm_identity</i>
+    <span class="title teal-text">ID</span>
+    <br>
+    <%= @item.id %>
+    <br>
+    <br>
+    <span class="title teal-text">Version</span>
+    <br>
+    <%= @item.version %>
+  </li>
+
+  <li class="collection-item avatar">
+    <i class="material-icons circle">group</i>
+    <span class="title teal-text">Groups</span>
+    <table>
+      <thead>
+        <th>Name</th>
+        <th>Description</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= @item.item_data[:name] %></td>
+          <td><%= @item.item_data[:description] %></td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+  </li>
+
+  <li class="collection-item avatar">
+    <i class="material-icons circle">history</i>
+    <span class="title teal-text">History</span>
+    <br>
+    Updated: <%= time_ago_in_words @item.updated_at %> ago
+  </li>
+</ul>
