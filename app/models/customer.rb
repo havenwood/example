@@ -66,7 +66,7 @@ class Customer
     end
 
     def list
-      @list ||= API.list
+      @list ||= API.list(memoize: true)
     end
 
     def paginate(page:, per_page: 25)
