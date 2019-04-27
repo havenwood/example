@@ -11,7 +11,7 @@ class Customer
   extend ActiveSupport::Concern
   extend Enumerable
 
-  API = Square.new.customers
+  API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).customers
 
   TRAITS = %i[id creation_source groups preferences created_at updated_at]
   FIELDS = %i[given_name family_name company_name nickname email_address address
@@ -66,13 +66,11 @@ class Customer
     end
 
     def list
-      @list ||= API.list(memoize: true)
+      @list ||= API.list
     end
 
     def paginate(page:, per_page: 25)
-      list.paginate(page: page, per_page: per_page).map do |customer|
-        new customer
-      end
+      list.data.map { |customer| new customer }
     end
 
     def create(attributes = OpenStruct.new)

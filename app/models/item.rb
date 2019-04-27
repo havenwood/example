@@ -11,7 +11,7 @@ class Item
   extend ActiveSupport::Concern
   extend Enumerable
 
-  API = Square.new.catalog
+  API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).catalog
 
   TRAITS = %i[type id updated_at is_deleted present_at_all_locations
               item_data]
@@ -66,13 +66,11 @@ class Item
     end
 
     def list
-      @list ||= API.list(memoize: true)
+      @list ||= API.list_catalog
     end
 
     def paginate(page:, per_page: 25)
-      list.paginate(page: page, per_page: per_page).map do |item|
-        new item
-      end
+      list.data['objects'].map { |item| new item }
     end
 
     def create(attributes = OpenStruct.new)
