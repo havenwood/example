@@ -15,12 +15,14 @@ class Customer
 
   attribute :id, :string
   attribute :creation_source, :string
-  attribute :groups
-  attribute :preferences
+  attribute :groups, :array_of_hashes, default: []
+  attribute :preferences, :hash, default: {}
   attribute :created_at, :datetime
   attribute :updated_at, :datetime
+  attribute :birthday, :datetime
+  attribute :address, :hash, default: {}
 
-  FIELDS.each do |field|
+  (FIELDS - %i[address birthday]).each do |field|
     attribute field, :string
   end
 
