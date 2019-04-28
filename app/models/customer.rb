@@ -1,14 +1,9 @@
 class Customer
-  include ActiveModel::AttributeAssignment
   include ActiveModel::Attributes
-  include ActiveModel::Conversion
   include ActiveModel::Dirty
   include ActiveModel::Serializers::JSON
-  include ActiveModel::Validations
+  include ActiveModel::Model
 
-  extend ActiveModel::Naming
-  extend ActiveModel::Translation
-  extend ActiveSupport::Concern
   extend Enumerable
 
   API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).customers
@@ -52,6 +47,8 @@ class Customer
     @persisted = false
     assign_attributes(attributes) if attributes
     yield self if block_given?
+
+    self
   end
 
   class << self
