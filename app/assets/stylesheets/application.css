@@ -15,11 +15,11 @@
  */
  @font-face {
    font-family: "SqMarket";
-   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-bold-054473e1aeec9c147f04a20aa7f0cc24b77d8c5818f693fc9473c5d55f6c0f18.woff") format("woff"),
-   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-medium-890b696bca1650f397dbfa244c8d0c2a497765c638dbaf776de09413a6b83d5d.woff") format("woff"),
-   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-lightitalic-88f806e3e6467f3b154ca685786c1b12a23388f998e0cb88c95a3b87183d1843.woff") format("woff"),
-   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-regular-9720e9f4071a43368f1d543cb21c7686c7443dd833e069b5809a5e4bc2468bfd.woff") format("woff"),
-        url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-light-fa79c43e0e9d0ab1765cdfd0b7ad4dcaeae46615f638f7d91404d4c75a9c1554.woff") format("woff");
+   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-bold-054473e1aeec9c147f04a20aa7f0cc24b77d8c5818f693fc9473c5d55f6c0f18.woff") format("woff");
+   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-medium-890b696bca1650f397dbfa244c8d0c2a497765c638dbaf776de09413a6b83d5d.woff") format("woff");
+   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-lightitalic-88f806e3e6467f3b154ca685786c1b12a23388f998e0cb88c95a3b87183d1843.woff") format("woff");
+   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-regular-9720e9f4071a43368f1d543cb21c7686c7443dd833e069b5809a5e4bc2468bfd.woff") format("woff");
+   src: url("https://connectv2-docs-production-f.squarecdn.com/assets/sqmarket/sqmarket-light-fa79c43e0e9d0ab1765cdfd0b7ad4dcaeae46615f638f7d91404d4c75a9c1554.woff") format("woff");
  }
 
 html {
