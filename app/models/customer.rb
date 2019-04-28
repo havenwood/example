@@ -99,7 +99,7 @@ class Customer
     raise response.errors.inspect if response.error?
 
     self.attributes = response.data
-    changes_applied
+    persist!
 
     self
   end
