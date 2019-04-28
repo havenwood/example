@@ -56,30 +56,34 @@ class Item
 
   class << self
     def find(id)
-      catalog = API.retrieve object_id: id
+      catalog = API.retrieve_catalog_object object_id: id
       raise KeyError, "no item found for id `#{id}'" unless catalog.success?
 
-      new(catalog.to_h).tap do |item|
+      new(catalog.data['object']).tap do |item|
         item.persisted = true
         item.changes_applied
       end
     end
 
-    def list
-      @list ||= API.list_catalog
-    end
+    def all
+      list = API.list_catalog
+      items = list.data['objects'].map { |item| new item }
 
-    def paginate(page:, per_page: 25)
-      list.data['objects'].map { |item| new item }
+      while cursor = list.cursor
+        list = API.list_catalog cursor: cursor
+        items += list.data['objects'].map { |item| new item }
+      end
+      
+      items
     end
 
     def create(attributes = OpenStruct.new)
       yield attributes if block_given?
-      API.create idempotency_key: SecureRandom.uuid, **attributes.to_h.symbolize_keys
+      API.create idempotency_key: SecureRandom.uuid, body: attributes.to_h.symbolize_keys
     end
 
     def update(id, attributes)
-      API.update object_id: id, **attributes.to_h.symbolize_keys
+      API.update object_id: id, body: attributes.to_h.symbolize_keys
     end
 
     def delete(id)
@@ -88,9 +92,7 @@ class Item
     alias destroy delete
 
     def each
-      list.lazy.flat_map(&:to_a).each do |item|
-        yield find item[:id]
-      end
+      all.each { |customer| yield customer }
     end
   end
 
@@ -98,7 +100,7 @@ class Item
     response = self.class.update id, attributes
     raise response.errors.inspect if response.error?
 
-    self.attributes = response.to_h
+    self.attributes = response.data['object']
     changes_applied
 
     self
@@ -128,7 +130,7 @@ class Item
     return false if response.error?
 
     @persisted = true
-    self.attributes = response.to_h
+    self.attributes = response.data['object']
     changes_applied
 
     self
@@ -143,7 +145,7 @@ class Item
     raise response.errors.inspect if response.error?
 
     @persisted = true
-    self.attributes = response.to_h
+    self.attributes = response.data['object']
     changes_applied
 
     self

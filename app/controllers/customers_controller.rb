@@ -6,9 +6,7 @@ class CustomersController < ApplicationController
   def index
     page = Integer params.fetch :page, 1
 
-    @customers = Customer.paginate page: page, per_page: PER_PAGE
-    @pagy = Pagy::Countless.new page: page, items: PER_PAGE
-    @pagy.finalize @customers.size.succ
+    @pagy, @customers = pagy_array Customer.all
   end
 
   def show
@@ -28,8 +26,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if response.success?
-        Customer.list.flush_cache
-        @customer = Customer.find response.to_h[:id]
+        @customer = Customer.find response.data['id']
 
         format.html { redirect_to @customer, notice: 'Customer was successfully created.' }
         format.json { render :show, status: :created, location: @customer }
@@ -49,8 +46,6 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if response.success?
-        Customer.list.flush_cache
-
         format.html { redirect_to @customer, notice: 'Customer was successfully updated.' }
         format.json { render :show, status: :ok, location: @customer }
       else
@@ -65,7 +60,6 @@ class CustomersController < ApplicationController
 
   def destroy
     response = Customer.delete params[:id]
-    Customer.list.flush_cache if response.success?
 
     respond_to do |format|
       format.html { redirect_to customers_url, notice: 'Customer was successfully deleted.' }

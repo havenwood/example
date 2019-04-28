@@ -59,27 +59,31 @@ class Customer
       customer = API.retrieve customer_id: id
       raise KeyError, "no customer found for id `#{id}'" unless customer.success?
 
-      new(customer.to_h).tap do |customer|
+      new(customer.data).tap do |customer|
         customer.persisted = true
         customer.changes_applied
       end
     end
 
-    def list
-      @list ||= API.list
-    end
+    def all
+      list = API.list
+      customers = list.data.map { |customer| new customer }
 
-    def paginate(page:, per_page: 25)
-      list.data.map { |customer| new customer }
+      while cursor = list.cursor
+        list = API.list cursor: cursor
+        customers += list.data.map { |customer| new customer }
+      end
+      
+      customers
     end
 
     def create(attributes = OpenStruct.new)
       yield attributes if block_given?
-      API.create idempotency_key: SecureRandom.uuid, **attributes.to_h.symbolize_keys
+      API.create body: attributes.to_h.symbolize_keys
     end
 
     def update(id, attributes)
-      API.update customer_id: id, **attributes.to_h.symbolize_keys
+      API.update customer_id: id, body: attributes.to_h.symbolize_keys
     end
 
     def delete(id)
@@ -88,9 +92,7 @@ class Customer
     alias destroy delete
 
     def each
-      list.lazy.flat_map(&:to_a).each do |customer|
-        yield find customer[:id]
-      end
+      all.each { |customer| yield customer }
     end
   end
 
@@ -98,7 +100,7 @@ class Customer
     response = self.class.update id, attributes
     raise response.errors.inspect if response.error?
 
-    self.attributes = response.to_h
+    self.attributes = response.data
     changes_applied
 
     self
@@ -128,7 +130,7 @@ class Customer
     return false if response.error?
 
     @persisted = true
-    self.attributes = response.to_h
+    self.attributes = response.data
     changes_applied
 
     self
@@ -143,7 +145,7 @@ class Customer
     raise response.errors.inspect if response.error?
 
     @persisted = true
-    self.attributes = response.to_h
+    self.attributes = response.data
     changes_applied
 
     self

@@ -1,2 +1,2 @@
-require 'pagy/extras/countless'
+require 'pagy/extras/array'
 require 'pagy/extras/materialize'

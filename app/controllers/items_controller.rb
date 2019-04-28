@@ -6,9 +6,7 @@ class ItemsController < ApplicationController
   def index
     page = Integer params.fetch :page, 1
 
-    @items = Item.paginate page: page, per_page: PER_PAGE
-    @pagy = Pagy::Countless.new page: page, items: PER_PAGE
-    @pagy.finalize @items.size.succ
+    @pagy, @items = pagy_array Item.all
   end
 
   def show
@@ -17,7 +15,6 @@ class ItemsController < ApplicationController
 
   def destroy
     response = Item.delete params[:id]
-    Item.list.flush_cache if response.success?
 
     respond_to do |format|
       format.html { redirect_to items_url, notice: 'Item was successfully deleted.' }

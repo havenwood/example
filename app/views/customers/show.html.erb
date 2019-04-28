@@ -47,10 +47,10 @@
         <th>ID</th>
       </thead>
       <tbody>
-        <% @customer.groups&.each do |id:, name:| %>
+        <% @customer.groups&.each do |group| %>
           <tr>
-            <td><%= name %></td>
-            <td class="monospace"><%= id.upcase %></td>
+            <td><%= group['name'] %></td>
+            <td class="monospace"><%= group['id'].upcase %></td>
           </tr>
         <% end %>
       </tbody>
