@@ -56,22 +56,21 @@ class Customer
       customer = API.retrieve customer_id: id
       raise KeyError, "no customer found for id `#{id}'" unless customer.success?
 
-      new(customer.data).tap do |customer|
-        customer.persisted = true
-        customer.changes_applied
-      end
+      new customer.data, &:persist!
     end
 
     def all
-      list = API.list
-      customers = list.data.map { |customer| new customer }
+      cursor = nil
+      customers = []
 
-      while cursor = list.cursor
-        list = API.list cursor: cursor
-        customers += list.data.map { |customer| new customer }
+      loop do
+        list = API.search body: {cursor: cursor}
+        customers += list.data.map do |customer|
+          new customer, &:persist!
+        end
+
+        return customers unless cursor
       end
-      
-      customers
     end
 
     def create(attributes = OpenStruct.new)
@@ -126,9 +125,8 @@ class Customer
     response = self.class.create changes.transform_values(&:last)
     return false if response.error?
 
-    @persisted = true
     self.attributes = response.data
-    changes_applied
+    persist!
 
     self
   end
@@ -141,15 +139,19 @@ class Customer
     response = self.class.create changes.transform_values(&:last)
     raise response.errors.inspect if response.error?
 
-    @persisted = true
     self.attributes = response.data
-    changes_applied
+    persist!
 
     self
   end
 
   def persisted?
     @persisted
+  end
+
+  def persist!
+    changes_applied
+    @persisted = true
   end
 
   def pretty_print(pp)
