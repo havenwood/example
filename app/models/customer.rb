@@ -44,6 +44,8 @@ class Customer
     public_send(attr).present?
   end
 
+  validates :email_address, format: {with: /\A[^@]+@[^@]+\z/}, allow_blank: true
+
   define_model_callbacks :update, :save
 
   after_save :persist!
