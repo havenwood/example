@@ -44,6 +44,11 @@ class Customer
     public_send(attr).present?
   end
 
+  define_model_callbacks :update, :save
+
+  after_save :persist!
+  after_update :persist!
+
   def initialize(attributes = {})
     super()
 
@@ -96,13 +101,14 @@ class Customer
   end
 
   def update(attributes)
-    response = self.class.update id, attributes
-    raise response.errors.inspect if response.error?
+    run_callbacks :update do
+      response = self.class.update id, attributes
+      raise response.errors.inspect if response.error?
 
-    self.attributes = response.data
-    persist!
+      self.attributes = response.data
 
-    self
+      self
+    end
   end
 
   def delete
@@ -116,36 +122,43 @@ class Customer
   alias destroy delete
 
   def save
-    # Update
-    if @persisted
-      return begin
-        update changes.transform_values(&:last)
-             rescue StandardError
+    run_callbacks :save do
+      return false unless valid?
+
+      # Update
+      if @persisted
+        begin
+          return update changes.transform_values(&:last)
+        rescue StandardError
+          return false
+        end
       end
+
+      # Create
+      response = self.class.create changes.transform_values(&:last)
+      return false if response.error?
+
+      self.attributes = response.data
+
+      self
     end
-
-    # Create
-    response = self.class.create changes.transform_values(&:last)
-    return false if response.error?
-
-    self.attributes = response.data
-    persist!
-
-    self
   end
 
   def save!
-    # Update
-    return update changes.transform_values(&:last) if @persisted
+    run_callbacks :save do
+      validate!
 
-    # Create
-    response = self.class.create changes.transform_values(&:last)
-    raise response.errors.inspect if response.error?
+      # Update
+      return update changes.transform_values(&:last) if @persisted
 
-    self.attributes = response.data
-    persist!
+      # Create
+      response = self.class.create changes.transform_values(&:last)
+      raise response.errors.inspect if response.error?
 
-    self
+      self.attributes = response.data
+
+      self
+    end
   end
 
   def persisted?
