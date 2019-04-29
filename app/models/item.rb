@@ -13,9 +13,8 @@ class Item
 
   API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).catalog
 
-  IMMUTABLE_FIELDS = %i[type id updated_at is_deleted present_at_all_locations
-              item_data]
-  FIELDS = %i[version]
+  IMMUTABLE_FIELDS = %i[type id updated_at is_deleted present_at_all_locations item_data].freeze
+  FIELDS = %i[version].freeze
 
   attribute :type, :string
   attribute :id, :string

@@ -8,9 +8,9 @@ class Customer
 
   API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).customers
 
-  IMMUTABLE_FIELDS = %i[id creation_source groups preferences created_at updated_at]
+  IMMUTABLE_FIELDS = %i[id creation_source groups preferences created_at updated_at].freeze
   FIELDS = %i[given_name family_name company_name nickname email_address address
-              phone_number reference_id note birthday idempotency_key]
+              phone_number reference_id note birthday idempotency_key].freeze
 
   attribute :id, :string
   attribute :creation_source, :string
