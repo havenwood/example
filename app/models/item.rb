@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Item
   include ActiveModel::AttributeAssignment
   include ActiveModel::Attributes
@@ -71,7 +73,7 @@ class Item
         list = API.list_catalog cursor: cursor
         items += list.data['objects'].map { |item| new item }
       end
-      
+
       items
     end
 
@@ -119,7 +121,7 @@ class Item
     if @persisted
       return begin
         update changes.transform_values(&:last)
-      rescue
+             rescue StandardError
       end
     end
 
@@ -176,6 +178,6 @@ class Item
   def inspect
     attrs = attributes.map { |field, value| "#{field}: #{value.inspect}" }.join(', ')
 
-    "#<#{self.class}:#{sprintf "%#018x", object_id << 1} #{attrs}>"
+    "#<#{self.class}:#{format '%#018x', object_id << 1} #{attrs}>"
   end
 end

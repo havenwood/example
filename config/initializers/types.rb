@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HashType < ActiveModel::Type::Value
   def cast(value)
     value.transform_keys &:to_sym

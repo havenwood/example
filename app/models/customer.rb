@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customer
   include ActiveModel::Attributes
   include ActiveModel::Dirty
@@ -65,7 +67,7 @@ class Customer
       customers = []
 
       loop do
-        list = API.search body: {cursor: cursor}
+        list = API.search body: { cursor: cursor }
         customers += list.data.map do |customer|
           new customer, &:persist!
         end
@@ -118,7 +120,7 @@ class Customer
     if @persisted
       return begin
         update changes.transform_values(&:last)
-      rescue
+             rescue StandardError
       end
     end
 
@@ -178,6 +180,6 @@ class Customer
   def inspect
     attrs = attributes.map { |field, value| "#{field}: #{value.inspect}" }.join(', ')
 
-    "#<#{self.class}:#{sprintf "%#018x", object_id << 1} #{attrs}>"
+    "#<#{self.class}:#{format '%#018x', object_id << 1} #{attrs}>"
   end
 end
