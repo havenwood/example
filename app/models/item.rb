@@ -13,10 +13,9 @@ class Item
 
   API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).catalog
 
-  TRAITS = %i[type id updated_at is_deleted present_at_all_locations
+  IMMUTABLE_FIELDS = %i[type id updated_at is_deleted present_at_all_locations
               item_data]
   FIELDS = %i[version]
-  ATTRIBUTES = TRAITS + FIELDS
 
   attribute :type, :string
   attribute :id, :string
@@ -159,7 +158,7 @@ class Item
     pp.object_address_group self do
       pp.breakable
 
-      attributes.symbolize_keys.slice(*self.class::TRAITS).each do |field, value|
+      attributes.symbolize_keys.slice(*self.class::IMMUTABLE_FIELDS).each do |field, value|
         pp.text "#{field}: #{value.inspect}"
         pp.comma_breakable
       end

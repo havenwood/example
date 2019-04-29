@@ -8,10 +8,9 @@ class Customer
 
   API = Square::Client.new(access_token: ENV['SQUARE_TOKEN']).customers
 
-  TRAITS = %i[id creation_source groups preferences created_at updated_at]
+  IMMUTABLE_FIELDS = %i[id creation_source groups preferences created_at updated_at]
   FIELDS = %i[given_name family_name company_name nickname email_address address
               phone_number reference_id note birthday idempotency_key]
-  ATTRIBUTES = TRAITS + FIELDS
 
   attribute :id, :string
   attribute :creation_source, :string
@@ -160,7 +159,7 @@ class Customer
     pp.object_address_group self do
       pp.breakable
 
-      attributes.symbolize_keys.slice(*self.class::TRAITS).each do |field, value|
+      attributes.symbolize_keys.slice(*self.class::IMMUTABLE_FIELDS).each do |field, value|
         pp.text "#{field}: #{value.inspect}"
         pp.comma_breakable
       end
