@@ -144,10 +144,10 @@ class Customer
 
       # Update
       if @persisted
-        begin
-          return update changes.transform_values(&:last)
+        return begin
+          update changes.transform_values(&:last)
         rescue StandardError
-          return false
+          false
         end
       end
 
