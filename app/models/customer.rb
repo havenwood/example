@@ -102,12 +102,27 @@ class Customer
     end
   end
 
-  def update(attributes)
+  def update(attributes, return_response: false)
+    run_callbacks :update do
+      response = self.class.update id, attributes
+      return false if response.error?
+
+      self.attributes = response.data
+
+      return response if return_response
+      
+      self
+    end
+  end
+  
+  def update!(attributes)
     run_callbacks :update do
       response = self.class.update id, attributes
       raise response.errors.inspect if response.error?
-
+      
       self.attributes = response.data
+
+      return response if return_response
 
       self
     end

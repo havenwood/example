@@ -44,7 +44,7 @@ class CustomersController < ApplicationController
 
   def update
     @customer = Customer.find params[:id]
-    response = Customer.update @customer.id, customer_params
+    response = @customer.update customer_params, return_response: true
 
     respond_to do |format|
       if response.success?
