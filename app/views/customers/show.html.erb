@@ -50,7 +50,7 @@
         <% @customer.groups&.each do |group| %>
           <tr>
             <td><%= group['name'] %></td>
-            <td class="monospace"><%= group['id'].upcase %></td>
+            <td class="monospace"><%= group['id']&.upcase %></td>
           </tr>
         <% end %>
       </tbody>
