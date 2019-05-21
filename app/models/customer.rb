@@ -66,7 +66,7 @@ class Customer
       customer = API.retrieve customer_id: id
       raise KeyError, "no customer found for id `#{id}'" unless customer.success?
 
-      new customer.data, &:persist!
+      new customer.data.customer, &:persist!
     end
 
     def all
@@ -75,7 +75,7 @@ class Customer
 
       loop do
         list = API.search body: { cursor: cursor }
-        customers += list.data.map do |customer|
+        customers += list.data.customers.map do |customer|
           new customer, &:persist!
         end
 
